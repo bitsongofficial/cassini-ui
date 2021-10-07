@@ -9,8 +9,10 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
+    "@metamask/detect-provider": "^1.2.0",
     "@nuxtjs/axios": "^5.13.6",
     "core-js": "^3.15.1",
+    "ethers": "^5.4.7",
     "nuxt": "^2.15.7",
     "vuetify": "^2.5.5"
   },
