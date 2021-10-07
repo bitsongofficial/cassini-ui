@@ -97,7 +97,7 @@
               >Connect Wallet</v-btn
             >
             <v-btn block large color="secondary" @click.stop="transfer" v-else
-              >Next</v-btn
+              >Transfer BTSG</v-btn
             >
           </v-col>
         </v-row>
@@ -105,7 +105,7 @@
     </v-container>
 
     <connect-eth-wallet
-      :show="connectWalletDialog"
+      v-model="connectWalletDialog"
       v-on:connect="onConnect"
       v-on:loading="onLoading"
       v-on:close="onClose"
