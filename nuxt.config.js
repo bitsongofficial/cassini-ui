@@ -20,9 +20,69 @@ export default {
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' }
     ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+    link: [{
+      rel: 'icon',
+      type: 'image/png',
+      size: '32x32',
+      href: '/favicon/favicon-32x32.png'
+    },
+    {
+      rel: 'icon',
+      type: 'image/png',
+      size: '96x96',
+      href: '/favicon/favicon-96x96.png'
+    },
+    {
+      rel: 'icon',
+      type: 'image/png',
+      size: '16x16',
+      href: '/favicon/favicon-16x16.png'
+    },
+    {
+      rel: 'apple-touch-icon',
+      size: '57x57',
+      href: '/favicon/apple-icon-57x57.png'
+    },
+    {
+      rel: 'apple-touch-icon',
+      size: '60x60',
+      href: '/favicon/apple-icon-60x60.png'
+    },
+    {
+      rel: 'apple-touch-icon',
+      size: '72x72',
+      href: '/favicon/apple-icon-72x72.png'
+    },
+    {
+      rel: 'apple-touch-icon',
+      size: '76x76',
+      href: '/favicon/apple-icon-76x76.png'
+    },
+    {
+      rel: 'apple-touch-icon',
+      size: '114x114',
+      href: '/favicon/apple-icon-114x114.png'
+    },
+    {
+      rel: 'apple-touch-icon',
+      size: '120x120',
+      href: '/favicon/apple-icon-120x120.png'
+    },
+    {
+      rel: 'apple-touch-icon',
+      size: '144x144',
+      href: '/favicon/apple-icon-144x144.png'
+    },
+    {
+      rel: 'apple-touch-icon',
+      size: '152x152',
+      href: '/favicon/apple-icon-152x152.png'
+    },
+    {
+      rel: 'apple-touch-icon',
+      size: '180x180',
+      href: '/favicon/apple-icon-180x180.png'
+    }]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -54,13 +114,14 @@ export default {
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
+    treeShake: true,
     theme: {
       dark: true,
       themes: {
         dark: {
           primary: colors.blue.darken2,
           accent: colors.grey.darken3,
-          secondary: colors.amber.darken3,
+          secondary: '#4f4e7d',
           info: colors.teal.lighten1,
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,

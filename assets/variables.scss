@@ -2,3 +2,48 @@
 //
 // The variables you want to modify
 // $font-size-root: 20px;
+
+@font-face {
+  font-family: "Circular Std Book";
+  src: url("/font/860c3ec7bbc5da3e97233ccecafe512e.eot"); /* IE9*/
+  src: url("/font/860c3ec7bbc5da3e97233ccecafe512e.eot?#iefix")
+      format("embedded-opentype"),
+    /* IE6-IE8 */ url("/font/860c3ec7bbc5da3e97233ccecafe512e.woff2")
+      format("woff2"),
+    /* chrome、firefox */ url("/font/860c3ec7bbc5da3e97233ccecafe512e.woff")
+      format("woff"),
+    /* chrome、firefox */ url("/font/860c3ec7bbc5da3e97233ccecafe512e.ttf")
+      format("truetype"),
+    /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+      url("/font/860c3ec7bbc5da3e97233ccecafe512e.svg#Circular Std Book")
+      format("svg"); /* iOS 4.1- */
+}
+
+$background-color: #14142e !default;
+//$background-card: hsla(0, 0%, 100%, 0.04) !default;
+$background-card: #1c1e35 !default;
+$body-font-family: "Circular Std Book", sans-serif !default;
+$heading-font-family: "Circular Std Book", sans-serif !default;
+
+$material-dark: (
+  "app-bar": $background-color,
+  "background": $background-color,
+  "cards": $background-card
+);
+
+$headings: (
+  "h1": (
+    "font-family": $heading-font-family
+  ),
+  "h2": (
+    "size": 3.75rem,
+    "weight": 300,
+    "line-height": 3.75rem,
+    "letter-spacing": -0.0083333333em,
+    "font-family": $heading-font-family,
+    "text-transform": false
+  )
+);
+
+// .theme--dark.v-sheet: hsla(0,0%,100%,.04)!important
+@import "~vuetify/src/styles/styles.sass";
