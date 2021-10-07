@@ -65,13 +65,12 @@
       </v-row>
     </v-container>
 
-    <v-dialog
-      v-model="connectWalletDialog"
-      :fullscreen="$vuetify.breakpoint.smAndDown"
-      max-width="400"
-    >
-      <connect-eth-wallet v-on:connect="onConnect"></connect-eth-wallet>
-    </v-dialog>
+    <connect-eth-wallet
+      :show="connectWalletDialog"
+      v-on:connect="onConnect"
+      v-on:loading="onLoading"
+      v-on:close="onClose"
+    ></connect-eth-wallet>
   </v-card>
 </template>
 
@@ -88,7 +87,8 @@ export default {
   data() {
     return {
       connectWalletDialog: false,
-      address: null
+      address: null,
+      dialogProminent: false
     };
   },
 
@@ -98,7 +98,17 @@ export default {
     },
 
     onConnect(address) {
+      this.connectWalletDialog = false;
       this.address = address;
+    },
+
+    onLoading(status) {
+      this.dialogProminent = status;
+    },
+
+    onClose() {
+      console.log("close");
+      this.connectWalletDialog = false;
     }
   }
 };
