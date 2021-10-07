@@ -12,10 +12,7 @@
       <v-row>
         <v-col sm="12" lg="6">
           <div class="overline">FROM</div>
-          <chain-card
-            network="Ethereum"
-            address="0x05079687d35b93538cbd59fe5596380cae9054a9"
-          />
+          <chain-card network="Ethereum" :address="address" />
         </v-col>
 
         <v-col
@@ -73,7 +70,7 @@
       :fullscreen="$vuetify.breakpoint.smAndDown"
       max-width="400"
     >
-      <connect-eth-wallet></connect-eth-wallet>
+      <connect-eth-wallet v-on:connect="onConnect"></connect-eth-wallet>
     </v-dialog>
   </v-card>
 </template>
@@ -90,13 +87,18 @@ export default {
 
   data() {
     return {
-      connectWalletDialog: false
+      connectWalletDialog: false,
+      address: null
     };
   },
 
   methods: {
     openConnectWalletDialog() {
       this.connectWalletDialog = true;
+    },
+
+    onConnect(address) {
+      this.address = address;
     }
   }
 };
