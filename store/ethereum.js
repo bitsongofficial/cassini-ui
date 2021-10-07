@@ -1,15 +1,17 @@
 import detectEthereumProvider from "@metamask/detect-provider";
 import { providers, utils, Contract } from "ethers";
 
-import WalletConnect from "@walletconnect/client";
-import QRCodeModal from "@walletconnect/qrcode-modal";
+import WalletConnectProvider from "@walletconnect/web3-provider";
 
-let subscription
+import { BigNumber } from "bignumber.js";
+
+let subscription, provider
 
 export const state = () => ({
   mustApprove: true,
   pendingTransactions: [],
   address: null,
+  balance: new BigNumber(0),
   chainId: null,
   providers: {
     metamask: {
@@ -34,6 +36,7 @@ export const getters = {
   providers: state => state.providers,
   pendingTransactions: state => state.pendingTransactions,
   address: state => state.address,
+  balance: state => state.balance,
   loading: state => state.providers.metamask.loading
 }
 
@@ -42,6 +45,7 @@ export const mutations = {
   setMetamaskErrors: (state, payload) => state.providers.metamask.errors = payload,
   setWalletConnectErrors: (state, payload) => state.providers.walletConnect.errors = payload,
   setAddress: (state, payload) => state.address = payload,
+  setBalance: (state, payload) => state.balance = payload,
   setChainId: (state, payload) => state.chainId = payload,
   setApprove: (state, payload) => state.mustApprove = payload,
   addPendingTransaction: (state, payload) => state.pendingTransactions.push(payload),
@@ -52,7 +56,7 @@ export const mutations = {
 }
 
 export const actions = {
-  async connectMetamask({ getters, commit }) {
+  async connectMetamask({ getters, commit, dispatch }) {
     if (getters.loading.metamask) return
 
     // reset provider errors
@@ -74,11 +78,13 @@ export const actions = {
     try {
       await window.ethereum.enable();
 
-      const provider = new providers.Web3Provider(window.ethereum);
+      provider = new providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const address = await signer.getAddress();
 
       commit('setAddress', address)
+
+      dispatch('getBalance')
 
       return;
     } catch (err) {
@@ -88,57 +94,77 @@ export const actions = {
     }
   },
 
-  async connectWalletConnect({ getters, commit }) {
+  async connectWalletConnect({ getters, commit, dispatch }) {
     if (getters.loading.walletConnect) return
 
     // reset provider errors
     commit('setWalletConnectErrors', null)
 
-    const connector = new WalletConnect({
-      bridge: "https://bridge.walletconnect.org", // Required
-      qrcodeModal: QRCodeModal
+    const wcProvider = new WalletConnectProvider({
+      infuraId: process.env.INFURA,
     });
 
-    // Check if connection is already established
-    if (!connector.connected) {
-      // create new session
-      connector.createSession();
-    }
+    //  Enable session (triggers QR Code modal)
+    await wcProvider.enable();
 
-    // Subscribe to connection events
-    connector.on("connect", (error, payload) => {
-      if (error) {
-        commit('setWalletConnectErrors', error)
-      }
-
-      // Get provided accounts and chainId
-      const { accounts, chainId } = payload.params[0];
-
+    // Subscribe to accounts change
+    wcProvider.on("accountsChanged", (accounts) => {
+      console.log(accounts);
       commit('setAddress', accounts[0])
+    });
+
+    // Subscribe to chainId change
+    wcProvider.on("chainChanged", (chainId) => {
+      console.log(chainId);
       commit('setChainId', chainId)
     });
 
-    connector.on("session_update", (error, payload) => {
-      if (error) {
-        throw error;
-      }
-
-      // Get updated accounts and chainId
-      const { accounts, chainId } = payload.params[0];
-
-      commit('setAddress', accounts[0])
-      commit('setChainId', chainId)
-    });
-
-    connector.on("disconnect", (error, payload) => {
-      if (error) {
-        throw error;
-      }
-
-      // Delete connector
+    // Subscribe to session disconnection
+    wcProvider.on("disconnect", (code, reason) => {
+      console.log(code, reason);
       commit('setAddress', null)
       commit('setChainId', null)
     });
+
+    provider = new providers.Web3Provider(wcProvider);
+  },
+
+  async getBalance({ getters, commit }) {
+    try {
+      const contractAbiFragment = [
+        {
+          name: "balanceOf",
+          type: "function",
+          inputs: [
+            {
+              name: "_owner",
+              type: "address"
+            }
+          ],
+          outputs: [
+            {
+              name: "balance",
+              type: "uint256"
+            }
+          ],
+          constant: true,
+          payable: false
+        }
+      ];
+
+      const contract = new Contract(
+        process.env.BTSG_CONTRACT,
+        contractAbiFragment,
+        provider
+      );
+
+      const balance = await contract.balanceOf(getters.address);
+      commit('setBalance', balance)
+
+      // await this.getAllowance();
+    } catch (e) {
+      console.error(e);
+    }
   },
 
   addPendingTransaction({ commit, dispatch }, payload) {

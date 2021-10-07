@@ -58,7 +58,9 @@
                 label="Amount"
                 :error-messages="errors"
                 type="number"
-                :messages="[`Your balance is XXXXbtsg`]"
+                :messages="[
+                  `Your balance is ${formatNumber(balance.toString())}btsg`
+                ]"
               >
                 <template v-slot:append>
                   <v-btn text @click.stop="">Max</v-btn>
@@ -107,7 +109,6 @@
     <connect-eth-wallet
       v-model="connectWalletDialog"
       v-on:connect="onConnect"
-      v-on:loading="onLoading"
       v-on:close="onClose"
     ></connect-eth-wallet>
   </v-card>
@@ -130,6 +131,10 @@ Validator.extend("validAddress", {
 import ChainCard from "@/components/ChainCard.vue";
 import ConnectEthWallet from "~/components/ConnectEthWallet.vue";
 
+/// nuovo
+import { mapGetters } from "vuex";
+import { utils } from "ethers";
+
 export default {
   components: {
     ChainCard,
@@ -143,7 +148,6 @@ export default {
       connectWalletDialog: false,
       from: null,
       recipient: null,
-      dialogProminent: false,
       amount: 0
     };
   },
@@ -158,18 +162,19 @@ export default {
       this.from = address;
     },
 
-    onLoading(status) {
-      this.dialogProminent = status;
-    },
-
     onClose() {
       this.connectWalletDialog = false;
+    },
+
+    formatNumber(number) {
+      return utils.formatUnits(number, 18);
     },
 
     transfer() {}
   },
 
   computed: {
+    ...mapGetters("ethereum", ["balance"]),
     addressRules() {
       return {
         required: true,

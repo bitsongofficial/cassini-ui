@@ -1,6 +1,12 @@
+require('dotenv').config()
 import colors from 'vuetify/es5/util/colors'
 
 export default {
+  env: {
+    BTSG_CONTRACT: process.env.BTSG_CONTRACT || '0x05079687D35b93538cbd59fe5596380cae9054A9',
+    INFURA: process.env.INFURA || null
+  },
+
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
 
@@ -100,13 +106,14 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
-    'nuxt-validate',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/dotenv',
+    'nuxt-validate',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
