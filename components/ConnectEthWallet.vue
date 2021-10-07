@@ -27,14 +27,18 @@
               <v-list-item-title class="font-weight-bold"
                 >Metamask</v-list-item-title
               >
-              <v-list-item-subtitle v-if="errors.metamask" class="red--text">{{
-                errors.metamask
-              }}</v-list-item-subtitle>
+              <v-list-item-subtitle
+                v-if="providerErrors.metamask"
+                class="red--text"
+                >{{ providerErrors.metamask }}</v-list-item-subtitle
+              >
             </v-list-item-content>
+
             <v-list-item-action>
               <v-btn icon v-if="!loading.metamask">
                 <v-icon>mdi-chevron-right</v-icon>
               </v-btn>
+
               <v-progress-circular
                 v-else
                 indeterminate
@@ -44,8 +48,9 @@
             </v-list-item-action>
           </v-list-item>
         </v-card>
+
         <v-card outlined>
-          <v-list-item @click.stop="">
+          <v-list-item @click.stop="connectWalletConnect">
             <v-list-item-avatar>
               <img src="/walletconnect.svg" />
             </v-list-item-avatar>
@@ -55,6 +60,7 @@
                 >Wallet Connect</v-list-item-title
               >
             </v-list-item-content>
+
             <v-list-item-action>
               <v-btn icon>
                 <v-icon>mdi-chevron-right</v-icon>
@@ -69,7 +75,10 @@
 
 <script>
 import detectEthereumProvider from "@metamask/detect-provider";
-import { ethers, utils, Contract } from "ethers";
+import { providers, utils, Contract } from "ethers";
+
+import WalletConnect from "@walletconnect/client";
+import QRCodeModal from "@walletconnect/qrcode-modal";
 
 export default {
   props: {
@@ -85,7 +94,7 @@ export default {
         metamask: false,
         walletConnet: false
       },
-      errors: {
+      providerErrors: {
         metamask: null
       },
       address: null
@@ -94,7 +103,7 @@ export default {
 
   methods: {
     resetErrors() {
-      this.errors.metamask = null;
+      this.providerErrors.metamask = null;
     },
 
     toggleLoading() {
@@ -115,7 +124,7 @@ export default {
       const metamask = await detectEthereumProvider();
 
       if (!metamask) {
-        this.errors.metamask = "Unable to detect Metamask";
+        this.providerErrors.metamask = "Unable to detect Metamask";
         this.toggleLoading();
         return;
       }
@@ -123,7 +132,7 @@ export default {
       try {
         await window.ethereum.enable();
 
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const provider = new providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const address = await signer.getAddress();
 
@@ -133,6 +142,67 @@ export default {
       } finally {
         this.toggleLoading();
       }
+    },
+
+    async connectWalletConnect() {
+      // const provider = new WalletConnectProvider({
+      //   rpc: {
+      //     97: "https://data-seed-prebsc-1-s1.binance.org:8545/",
+      //     56: "https://bsc-dataseed1.binance.org/"
+      //   },
+      //   bridge: "https://bridge.myhostedserver.com",
+      //   qrcodeModalOptions: {
+      //     mobileLinks: ["metamask", "trust"]
+      //   }
+      // });
+
+      // const provider = new providers.Web3Provider(provider);
+      // const signer = provider.getSigner();
+      // const address = await signer.getAddress();
+
+      const connector = new WalletConnect({
+        bridge: "https://bridge.walletconnect.org", // Required
+        qrcodeModal: QRCodeModal
+      });
+
+      // Check if connection is already established
+      if (!connector.connected) {
+        // create new session
+        connector.createSession();
+      }
+
+      // Subscribe to connection events
+      connector.on("connect", (error, payload) => {
+        if (error) {
+          throw error;
+        }
+
+        // Get provided accounts and chainId
+        const { accounts, chainId } = payload.params[0];
+        console.log(accounts);
+        console.log(chainId);
+      });
+
+      connector.on("session_update", (error, payload) => {
+        if (error) {
+          throw error;
+        }
+
+        // Get updated accounts and chainId
+        const { accounts, chainId } = payload.params[0];
+        console.log(accounts);
+        console.log(chainId);
+      });
+
+      connector.on("disconnect", (error, payload) => {
+        if (error) {
+          throw error;
+        }
+
+        // Delete connector
+      });
+
+      //this.$emit("connect", address);
     }
   }
 };
