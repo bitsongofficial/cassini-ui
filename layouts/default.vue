@@ -14,11 +14,11 @@
 </template>
 
 <script>
-import AppBar from "@/components/common/AppBar.vue";
+import AppBar from "@/components/layout/AppBar.vue";
 
 export default {
   components: {
-    AppBar
-  }
+    AppBar,
+  },
 };
 </script>
