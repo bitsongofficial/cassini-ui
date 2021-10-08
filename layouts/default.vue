@@ -8,7 +8,7 @@
     <v-main>
       <v-container>
         <v-row justify="center" align="center">
-          <v-col cols="12" sm="8" lg="6" xl="4">
+          <v-col cols="12" sm="8" lg="7" xl="5">
             <Nuxt />
           </v-col>
         </v-row>

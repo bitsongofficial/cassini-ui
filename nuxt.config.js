@@ -4,6 +4,7 @@ import colors from 'vuetify/es5/util/colors'
 export default {
   env: {
     BTSG_CONTRACT: process.env.BTSG_CONTRACT || '0x05079687D35b93538cbd59fe5596380cae9054A9',
+    BRIDGE_CONTRACT: process.env.BRIDGE_CONTRACT || '',
     INFURA: process.env.INFURA || null
   },
 
@@ -128,7 +129,7 @@ export default {
       themes: {
         dark: {
           primary: colors.blue.darken2,
-          accent: colors.grey.darken3,
+          accent: '#fc015b',
           secondary: '#4f4e7d',
           info: colors.teal.lighten1,
           warning: colors.amber.base,

@@ -5,6 +5,8 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 
 import { BigNumber } from "bignumber.js";
 
+import * as Abi from '@/utils/abi'
+
 let subscription, provider
 
 export const state = () => ({
@@ -94,7 +96,7 @@ export const actions = {
     }
   },
 
-  async connectWalletConnect({ getters, commit, dispatch }) {
+  async connectWalletConnect({ getters, commit }) {
     if (getters.loading.walletConnect) return
 
     // reset provider errors
@@ -129,37 +131,40 @@ export const actions = {
     provider = new providers.Web3Provider(wcProvider);
   },
 
-  async getBalance({ getters, commit }) {
+  async getBalance({ getters, commit, dispatch }) {
     try {
-      const contractAbiFragment = [
-        {
-          name: "balanceOf",
-          type: "function",
-          inputs: [
-            {
-              name: "_owner",
-              type: "address"
-            }
-          ],
-          outputs: [
-            {
-              name: "balance",
-              type: "uint256"
-            }
-          ],
-          constant: true,
-          payable: false
-        }
-      ];
-
       const contract = new Contract(
         process.env.BTSG_CONTRACT,
-        contractAbiFragment,
+        Abi.balanceOf,
         provider
       );
 
       const balance = await contract.balanceOf(getters.address);
       commit('setBalance', balance)
+
+      dispatch('getAllowance')
+    } catch (e) {
+      console.error(e);
+    }
+  },
+
+  async getAllowance({ getters, commit }) {
+    try {
+      const contract = new Contract(
+        process.env.BTSG_CONTRACT,
+        Abi.allowance,
+        provider
+      );
+
+      const allowance = await contract.allowance(
+        getters.address,
+        process.env.BRIDGE_CONTRACT
+      );
+
+      const result = allowance.lt(getters.balance);
+      commit('setApprove', result);
+
+      console.log(result)
 
       // await this.getAllowance();
     } catch (e) {

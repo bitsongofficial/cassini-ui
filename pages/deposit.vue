@@ -8,17 +8,18 @@
       <v-toolbar-title class="headline">Deposit</v-toolbar-title>
       <v-spacer></v-spacer>
     </v-toolbar>
+
     <v-container>
       <v-row>
-        <v-col sm="12" lg="6">
+        <v-col sm="12" lg="5">
           <div class="overline">FROM</div>
           <chain-card network="Ethereum" :address="from" />
         </v-col>
 
         <v-col
-          v-if="$vuetify.breakpoint.mdAndUp"
-          md="1"
-          class="d-flex align-center"
+          v-if="$vuetify.breakpoint.lgAndUp"
+          lg="2"
+          class="d-flex justify-center align-center text-center"
         >
           <v-icon class="pt-8">mdi-arrow-right</v-icon>
         </v-col>
@@ -91,6 +92,36 @@
         <v-row>
           <v-col cols="12">
             <v-btn
+              v-if="from && mustApprove"
+              block
+              large
+              color="accent"
+              @click.stop="transfer"
+              class="mb-4 font-weight-bold"
+              style="text-transform:none"
+            >
+              Allow the BitSong Bridge to use your BTSG
+
+              <v-tooltip bottom>
+                <template v-slot:activator="{ on, attrs }">
+                  <v-icon
+                    dark
+                    size="20"
+                    right
+                    class="mt-n1"
+                    v-bind="attrs"
+                    v-on="on"
+                    >mdi-information-outline</v-icon
+                  >
+                </template>
+                <span
+                  >You must give the BitSong Bridge smart contracts permission
+                  to use your BTSG. This is a one-time operation.</span
+                >
+              </v-tooltip>
+            </v-btn>
+
+            <v-btn
               block
               large
               color="secondary"
@@ -98,8 +129,14 @@
               v-if="from === null"
               >Connect Wallet</v-btn
             >
-            <v-btn block large color="secondary" @click.stop="transfer" v-else
-              >Transfer BTSG</v-btn
+            <v-btn
+              :disabled="from && mustApprove"
+              block
+              large
+              color="secondary"
+              @click.stop="transfer"
+              v-else
+              >Deposit {{ amountYouGet }} BTSG</v-btn
             >
           </v-col>
         </v-row>
@@ -174,7 +211,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters("ethereum", ["balance"]),
+    ...mapGetters("ethereum", ["balance", "mustApprove"]),
     addressRules() {
       return {
         required: true,
