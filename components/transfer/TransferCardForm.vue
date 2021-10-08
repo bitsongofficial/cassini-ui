@@ -27,9 +27,7 @@
           label="Amount"
           :error-messages="errors"
           type="number"
-          :messages="[
-            `Your balance is ${formatNumber(balance.toString())}btsg`
-          ]"
+          :messages="amountMessages"
         >
           <template v-slot:append>
             <v-btn text @click.stop="">Max</v-btn>
@@ -37,62 +35,50 @@
         </v-text-field>
       </validation-provider>
 
-      <deposit-card-overview></deposit-card-overview>
+      <transfer-card-overview></transfer-card-overview>
     </v-col>
   </v-row>
 </template>
 
 <script>
 import { ValidationProvider, Validator } from "vee-validate";
-
-import { isValidAddress } from "@/utils/address";
 import { utils } from "ethers";
-
 import { mapFields } from "vuex-map-fields";
 
-import DepositCardOverview from "@/components/deposit/card/Overview.vue";
+import { isValidAddress } from "@/utils/address";
+
+import TransferCardOverview from "@/components/transfer/TransferCardOverview.vue";
 
 Validator.extend("validAddress", {
-  getMessage: field => "The address is not a valid bitsong address",
-  validate: value => !!isValidAddress(value, "bitsong")
+  getMessage: () => "The address is not a valid bitsong address",
+  validate: (value) => !!isValidAddress(value, "bitsong"),
 });
 
 export default {
+  name: "TransferCardForm",
+
   props: {
     balance: {
       type: String | Number,
-      default: () => 0
-    }
+      default: () => 0,
+    },
   },
 
   components: {
     ValidationProvider,
-    DepositCardOverview
-  },
-
-  methods: {
-    formatNumber(number) {
-      return utils.formatUnits(number, 18);
-    }
+    TransferCardOverview,
   },
 
   computed: {
-    ...mapFields("deposit", ["recipient", "amount"]),
-
-    addressRules() {
-      return {
-        required: true,
-        validAddress: true
-      };
+    ...mapFields("transfer", ["recipient", "amount"]),
+    amountRules: () => ({ required: true, decimal: 18 }),
+    addressRules: () => ({ required: true, validAddress: true }),
+    amountMessages: function () {
+      return [
+        `Your balance is ${utils.formatUnits(this.balance.toString(), 18)}btsg`,
+      ];
     },
-
-    amountRules() {
-      return {
-        required: true,
-        decimal: 18
-      };
-    }
-  }
+  },
 };
 </script>
 

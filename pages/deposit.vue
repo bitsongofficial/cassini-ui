@@ -1,55 +1,48 @@
 <template>
   <div>
-    <deposit-card
+    <transfer-card
       class="mb-12"
-      v-on:connect-wallet-dialog="openConnectWalletDialog"
-      v-on:deposit="onDeposit"
+      @connect-wallet-dialog="openDialogConnectWalletEthereum"
     >
-    </deposit-card>
+    </transfer-card>
 
-    <connect-eth-wallet
-      v-model="connectWalletDialog"
-      v-on:connect="onConnect"
-      v-on:close="onClose"
-    ></connect-eth-wallet>
+    <dialog-connect-wallet-ethereum
+      v-model="dialogConnectWalletEthereum"
+      @connect="onConnect"
+      @close="onClose"
+    >
+    </dialog-connect-wallet-ethereum>
   </div>
 </template>
 
 <script>
-import DepositCard from "@/components/deposit/Card.vue";
-import ConnectEthWallet from "@/components/ConnectEthWallet.vue";
+import TransferCard from "@/components/transfer/TransferCard.vue";
+import DialogConnectWalletEthereum from "@/components/dialog/ConnectWalletEthereum.vue";
 
 export default {
   components: {
-    DepositCard,
-    ConnectEthWallet
+    TransferCard,
+    DialogConnectWalletEthereum,
   },
 
   data() {
     return {
-      connectWalletDialog: false
+      dialogConnectWalletEthereum: false,
     };
   },
 
   methods: {
-    openConnectWalletDialog() {
-      this.connectWalletDialog = true;
+    openDialogConnectWalletEthereum() {
+      this.dialogConnectWalletEthereum = true;
     },
 
-    onDeposit() {
-      this.deposit({
-        amount: new BigNumber(this.amount).toString()
-      });
-    },
-
-    onConnect(address) {
-      this.connectWalletDialog = false;
-      this.from = address;
+    onConnect() {
+      this.dialogConnectWalletEthereum = false;
     },
 
     onClose() {
-      this.connectWalletDialog = false;
-    }
-  }
+      this.dialogConnectWalletEthereum = false;
+    },
+  },
 };
 </script>

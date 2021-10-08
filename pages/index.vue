@@ -30,15 +30,15 @@ export default {
         {
           title: "Deposit",
           description: "Transfer your bitsong assets to BitSong Mainnet",
-          link: "/deposit"
+          link: "/deposit",
         },
         {
           title: "Withdraw",
           description: "Transfer your bitsong assets to Ethereum Mainet",
-          link: "/withdraw"
-        }
-      ]
+          link: "/",
+        },
+      ],
     };
-  }
+  },
 };
 </script>

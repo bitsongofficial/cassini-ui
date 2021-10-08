@@ -5,6 +5,13 @@
     </v-btn>
 
     <v-toolbar-title class="headline">Deposit</v-toolbar-title>
+
     <v-spacer></v-spacer>
   </v-toolbar>
 </template>
+
+<script>
+export default {
+  name: "TransferCardTitle",
+};
+</script>

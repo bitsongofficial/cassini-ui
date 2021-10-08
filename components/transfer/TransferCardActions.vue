@@ -7,7 +7,7 @@
         color="accent"
         @click.stop="setApprove"
         class="mb-4 font-weight-bold"
-        style="text-transform:none"
+        style="text-transform: none"
         :disabled="approveLoading"
         v-if="address && mustApprove"
       >
@@ -70,8 +70,10 @@
 import { mapGetters, mapActions } from "vuex";
 
 export default {
+  name: "TransferCardActions",
+
   methods: {
-    ...mapActions("ethereum", [`setApprove`, `deposit`])
+    ...mapActions("ethereum", [`setApprove`, `deposit`]),
   },
 
   computed: {
@@ -80,8 +82,8 @@ export default {
       "balance",
       "mustApprove",
       "approveLoading",
-      "depositLoading"
-    ])
-  }
+      "depositLoading",
+    ]),
+  },
 };
 </script>

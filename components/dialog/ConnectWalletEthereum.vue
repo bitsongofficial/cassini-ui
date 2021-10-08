@@ -60,11 +60,13 @@
 import { mapGetters, mapActions } from "vuex";
 
 export default {
+  name: "DialogConnectWalletEthereum",
+
   props: {
     value: {
       type: Boolean,
-      default: () => false
-    }
+      default: () => false,
+    },
   },
 
   watch: {
@@ -73,12 +75,12 @@ export default {
       handler(address) {
         this.$emit("close");
         this.$emit("connect", address);
-      }
-    }
+      },
+    },
   },
 
   computed: {
-    ...mapGetters("ethereum", [`address`, `loading`, `providers`])
+    ...mapGetters("ethereum", [`address`, `loading`, `providers`]),
   },
 
   methods: {
@@ -97,7 +99,7 @@ export default {
           this.connectMetamask();
           break;
       }
-    }
-  }
+    },
+  },
 };
 </script>
