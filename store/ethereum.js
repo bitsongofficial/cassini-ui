@@ -11,6 +11,8 @@ let subscription, provider
 
 export const state = () => ({
   mustApprove: true,
+  approveLoading: false,
+  depositLoading: false,
   pendingTransactions: [],
   address: null,
   balance: new BigNumber(0),
@@ -35,6 +37,8 @@ export const state = () => ({
 
 export const getters = {
   mustApprove: state => state.mustApprove,
+  approveLoading: state => state.approveLoading,
+  depositLoading: state => state.depositLoading,
   providers: state => state.providers,
   pendingTransactions: state => state.pendingTransactions,
   address: state => state.address,
@@ -43,6 +47,8 @@ export const getters = {
 }
 
 export const mutations = {
+  setApproveLoading: (state, payload) => state.approveLoading = payload,
+  setDepositLoading: (state, payload) => state.depositLoading = payload,
   setLoadingMetamask: (state, payload) => state.providers.metamask.loading = payload,
   setMetamaskErrors: (state, payload) => state.providers.metamask.errors = payload,
   setWalletConnectErrors: (state, payload) => state.providers.walletConnect.errors = payload,
@@ -163,12 +169,74 @@ export const actions = {
 
       const result = allowance.lt(getters.balance);
       commit('setApprove', result);
-
-      console.log(result)
-
-      // await this.getAllowance();
     } catch (e) {
       console.error(e);
+    }
+  },
+
+  async setApprove({ commit, getters }) {
+    try {
+      commit('setApproveLoading', true)
+
+      const signer = provider.getSigner();
+
+      const contract = new Contract(
+        process.env.BTSG_CONTRACT,
+        Abi.setApprove,
+        signer
+      );
+
+      const tx = await contract.approve(
+        process.env.BRIDGE_CONTRACT,
+        utils.parseUnits(getters.balance.toString(), 18)
+      );
+
+      let check = setInterval(async () => {
+        const response = await provider.getTransactionReceipt(tx.hash);
+
+        if (response !== null) {
+          commit("setApprove", false);
+          commit('setApproveLoading', false)
+
+          clearInterval(check);
+        }
+      }, 1500);
+
+    } catch (e) {
+      commit('setApproveLoading', false)
+      console.error(e);
+    }
+  },
+
+  async deposit({ commit, getters }, { amount }) {
+    try {
+      commit('setDepositLoading', true)
+
+      const signer = provider.getSigner();
+
+      const contract = new Contract(
+        process.env.BRIDGE_CONTRACT,
+        Abi.deposit,
+        signer
+      );
+
+      const tx = await contract.deposit(
+        utils.parseUnits(amount, 18),
+        getters.address,
+      );
+
+      let check = setInterval(async () => {
+        const response = await provider.getTransactionReceipt(tx.hash);
+
+        if (response !== null) {
+          commit('setDepositLoading', false)
+
+          clearInterval(check);
+        }
+      }, 5000);
+    } catch (e) {
+      commit('setDepositLoading', false)
+      console.error(e)
     }
   },
 

@@ -5,6 +5,7 @@ export default {
   env: {
     BTSG_CONTRACT: process.env.BTSG_CONTRACT || '0x05079687D35b93538cbd59fe5596380cae9054A9',
     BRIDGE_CONTRACT: process.env.BRIDGE_CONTRACT || '',
+    BRIDGE_FEE: process.env.BRIDGE_FEE || '',
     INFURA: process.env.INFURA || null
   },
 
