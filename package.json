@@ -21,7 +21,7 @@
     "ethers": "^5.4.7",
     "nuxt": "^2.15.7",
     "nuxt-validate": "^1.0.1",
-    "vuetify": "^2.5.5",
+    "vuetify": "^2.5.10",
     "vuex-map-fields": "^1.4.1"
   },
   "devDependencies": {
