@@ -43,7 +43,7 @@
         block
         large
         color="secondary"
-        @click.stop="$emit('connectWalletDialog')"
+        @click="$emit('connect')"
         v-if="address === null"
         >Connect Wallet</v-btn
       >
@@ -73,7 +73,7 @@ export default {
   name: "TransferCardActions",
 
   methods: {
-    ...mapActions("ethereum", [`setApprove`, `deposit`]),
+    ...mapActions("ethereum", [`setApprove`, `deposit`])
   },
 
   computed: {
@@ -82,8 +82,8 @@ export default {
       "balance",
       "mustApprove",
       "approveLoading",
-      "depositLoading",
-    ]),
-  },
+      "depositLoading"
+    ])
+  }
 };
 </script>

@@ -1,9 +1,6 @@
 <template>
   <div>
-    <transfer-card
-      class="mb-12"
-      @connect-wallet-dialog="openDialogConnectWalletEthereum"
-    >
+    <transfer-card class="mb-12" v-on:connect="openDialogConnectWalletEthereum">
     </transfer-card>
 
     <dialog-connect-wallet-ethereum
@@ -22,12 +19,12 @@ import DialogConnectWalletEthereum from "@/components/dialog/ConnectWalletEthere
 export default {
   components: {
     TransferCard,
-    DialogConnectWalletEthereum,
+    DialogConnectWalletEthereum
   },
 
   data() {
     return {
-      dialogConnectWalletEthereum: false,
+      dialogConnectWalletEthereum: false
     };
   },
 
@@ -42,7 +39,7 @@ export default {
 
     onClose() {
       this.dialogConnectWalletEthereum = false;
-    },
-  },
+    }
+  }
 };
 </script>

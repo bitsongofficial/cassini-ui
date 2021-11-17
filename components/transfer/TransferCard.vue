@@ -9,7 +9,7 @@
         <transfer-card-form :balance="balance"></transfer-card-form>
 
         <transfer-card-actions
-          v-on:connect-wallet-dialog="$emit('connectWalletDialog')"
+          v-on:connect="$emit('connect')"
           v-on:deposit="$emit('deposit')"
         >
         </transfer-card-actions>
@@ -35,11 +35,11 @@ export default {
     TransferCardTitle,
     TransferCardChain,
     TransferCardForm,
-    TransferCardActions,
+    TransferCardActions
   },
 
   computed: {
-    ...mapGetters("ethereum", ["address", "balance"]),
-  },
+    ...mapGetters("ethereum", ["address", "balance"])
+  }
 };
 </script>
