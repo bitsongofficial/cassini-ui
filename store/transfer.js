@@ -19,12 +19,16 @@ export const getters = {
     new BigNumber(state.amount)
       .multipliedBy(new BigNumber(process.env.BRIDGE_FEE))
       .toFixed(2),
-  amountYouGet: getters =>
+  amountYouGet: (state, getters) =>
     new BigNumber(getters.amountToTransfer)
       .minus(new BigNumber(getters.bridgeFee))
       .toFixed(2)
 };
 
 export const mutations = {
-  updateField
+  updateField,
+  clearForm: state => {
+    state.recipient = "",
+      state.amount = 0
+  }
 };

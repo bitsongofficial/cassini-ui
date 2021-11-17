@@ -1,6 +1,10 @@
 <template>
   <div>
-    <transfer-card class="mb-12" v-on:connect="openDialogConnectWalletEthereum">
+    <transfer-card
+      class="mb-12"
+      v-on:connect="openDialogConnectWalletEthereum"
+      v-on:deposit="onDeposit"
+    >
     </transfer-card>
 
     <dialog-connect-wallet-ethereum
@@ -39,6 +43,10 @@ export default {
 
     onClose() {
       this.dialogConnectWalletEthereum = false;
+    },
+
+    onDeposit() {
+      console.log("deposit");
     }
   }
 };

@@ -86,6 +86,15 @@ export const actions = {
     try {
       await window.ethereum.enable();
 
+      const chainId = await ethereum.request({ method: 'eth_chainId' });
+
+      if (chainId !== process.env.NETWORK) {
+        alert(`Wrong network, please select ${process.env.NETWORK_NAME}`)
+        return
+      }
+
+      //ethereum.on('chainChanged', window.location.reload());
+
       provider = new providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const address = await signer.getAddress();
@@ -208,7 +217,7 @@ export const actions = {
     }
   },
 
-  async deposit({ commit, getters }, { amount }) {
+  async deposit({ commit, getters, rootGetters }) {
     try {
       commit('setDepositLoading', true)
 
@@ -221,7 +230,7 @@ export const actions = {
       );
 
       const tx = await contract.deposit(
-        utils.parseUnits(amount, 18),
+        utils.parseUnits(rootGetters['transfer/amount'], 18),
         getters.address,
       );
 
@@ -229,6 +238,8 @@ export const actions = {
         const response = await provider.getTransactionReceipt(tx.hash);
 
         if (response !== null) {
+          commit('transfer/clearForm', null, { root: true })
+
           commit('setDepositLoading', false)
 
           clearInterval(check);

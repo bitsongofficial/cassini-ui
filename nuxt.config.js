@@ -8,7 +8,8 @@ export default {
     BRIDGE_CONTRACT: process.env.BRIDGE_CONTRACT || "",
     BRIDGE_FEE: process.env.BRIDGE_FEE || "0.03",
     INFURA: process.env.INFURA || null,
-    NETWORK: process.env.NETWORK || "0x3"
+    NETWORK: process.env.NETWORK || "0x3",
+    NETWORK_NAME: process.env.NETWORK_NAME || "Ropsten"
   },
 
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode

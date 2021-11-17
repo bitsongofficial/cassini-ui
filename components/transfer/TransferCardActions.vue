@@ -48,11 +48,18 @@
         >Connect Wallet</v-btn
       >
       <v-btn
-        :disabled="(address && mustApprove) || depositLoading"
+        :disabled="
+          (address && mustApprove) ||
+            depositLoading ||
+            balance.toString() === '0' ||
+            amountYouGet === '0.00' ||
+            isNaN(amountYouGet) ||
+            !isValidRecipient
+        "
         block
         large
         color="secondary"
-        @click.stop="$emit('deposit')"
+        @click.stop="deposit"
         v-else
       >
         <v-progress-circular
@@ -68,6 +75,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import { isValidAddress } from "@/utils/address";
 
 export default {
   name: "TransferCardActions",
@@ -83,7 +91,11 @@ export default {
       "mustApprove",
       "approveLoading",
       "depositLoading"
-    ])
+    ]),
+    ...mapGetters("transfer", ["amountYouGet", "recipient"]),
+    isValidRecipient() {
+      return !!isValidAddress(this.recipient, "bitsong");
+    }
   }
 };
 </script>
