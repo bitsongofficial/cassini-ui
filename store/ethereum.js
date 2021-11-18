@@ -231,7 +231,7 @@ export const actions = {
 
       const tx = await contract.deposit(
         utils.parseUnits(rootGetters['transfer/amount'], 18),
-        getters.address,
+        rootGetters['transfer/recipient'],
       );
 
       let check = setInterval(async () => {

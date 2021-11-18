@@ -4,9 +4,9 @@ import colors from "vuetify/es5/util/colors";
 export default {
   env: {
     BTSG_CONTRACT:
-      process.env.BTSG_CONTRACT || "0x05079687D35b93538cbd59fe5596380cae9054A9",
-    BRIDGE_CONTRACT: process.env.BRIDGE_CONTRACT || "0x234745EcfeDfa32113D8203462A23ba410e0FC87",
-    BRIDGE_FEE: process.env.BRIDGE_FEE || "0.03",
+      process.env.BTSG_CONTRACT || "0x4d439d3a5bad256433461b80a06c4ab452734a4a", // ropsten
+    BRIDGE_CONTRACT: process.env.BRIDGE_CONTRACT || "0x234745EcfeDfa32113D8203462A23ba410e0FC87", // ropsten
+    BRIDGE_FEE: process.env.BRIDGE_FEE || "0.00",
     INFURA: process.env.INFURA || null,
     NETWORK: process.env.NETWORK || "0x3",
     NETWORK_NAME: process.env.NETWORK_NAME || "Ropsten"
