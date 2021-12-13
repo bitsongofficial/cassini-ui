@@ -25,6 +25,6 @@
     "vuex-map-fields": "^1.4.1"
   },
   "devDependencies": {
-    "@nuxtjs/vuetify": "^1.12.1"
+    "@nuxtjs/vuetify": "^1.12.3"
   }
 }
