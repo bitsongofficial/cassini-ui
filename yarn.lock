@@ -903,10 +903,10 @@
     "@babel/helper-validator-identifier" "^7.14.9"
     to-fast-properties "^2.0.0"
 
-"@cosmjs/encoding@^0.26.1":
-  version "0.26.1"
-  resolved "https://registry.yarnpkg.com/@cosmjs/encoding/-/encoding-0.26.1.tgz#79bec892aaa831a974c9f854571d69caa549b225"
-  integrity sha512-wDFRvSQrTVIX7k4dPPSS/NmaytTU8ludDXi06TsaqVrgL/OR1hcGEkHhoKjodhZ2NS4gLvncI8XagV3SFySGhA==
+"@cosmjs/encoding@^0.28.9":
+  version "0.28.9"
+  resolved "https://registry.yarnpkg.com/@cosmjs/encoding/-/encoding-0.28.9.tgz#41dd5ca87086cf11ef7f1c91b7b2815ba0481cb3"
+  integrity sha512-AE+uL5LC2f9ZE8ehFPgb7yNMuGr4wx/cbH25gglRwl9utdND2lPVeYmbEF2MRJwB69hXaiPHblCDIz3KXZV9pQ==
   dependencies:
     base64-js "^1.3.0"
     bech32 "^1.1.4"
